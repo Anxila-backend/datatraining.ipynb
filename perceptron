@@ -1,0 +1,169 @@
+import pandas as pd #import pandas library
+# often we need some functions from numpy as well
+import numpy as np
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+#Suppose the csv filename is data.csv. The function read_csv will read a csv file and return a data frame. 
+df = pd.read_csv('/content/drive/MyDrive/data.csv/trainingdata (1).csv')
+df
+Sample	x1	x2	x3	d
+0	1	-0.6508	0.1097	4.0009	-1
+1	2	-1.4492	0.8896	4.4005	-1
+2	3	2.0850	0.6876	12.0710	-1
+3	4	0.2626	1.1476	7.7985	1
+4	5	0.6418	1.0234	7.0427	1
+5	6	0.2569	0.6730	8.3265	-1
+6	7	1.1155	0.6043	7.4446	1
+7	8	0.0914	0.3399	7.0677	-1
+8	9	0.0121	0.5256	4.6316	1
+9	10	-0.0429	0.4660	5.4323	1
+10	11	0.4340	0.6870	8.2287	-1
+11	12	0.2735	1.0287	7.1934	1
+12	13	0.4839	0.4851	7.4850	-1
+13	14	0.4089	-0.1267	5.5019	-1
+14	15	1.4391	0.1614	8.5843	-1
+15	16	-0.9115	-0.1973	2.1962	-1
+16	17	0.3654	1.0475	7.4858	1
+17	18	0.2144	0.7515	7.1699	1
+18	19	0.2013	1.0014	6.5489	1
+19	20	0.6483	0.2183	5.8991	1
+20	21	-0.1147	0.2242	7.2435	-1
+21	22	-0.7970	0.8795	3.8762	1
+22	23	-1.0625	0.6366	2.4707	1
+23	24	0.5307	0.1285	5.6883	1
+24	25	-1.2200	0.7777	1.7252	1
+25	26	0.3957	0.1076	5.6623	-1
+26	27	-0.1013	0.5989	7.1812	-1
+27	28	2.0149	0.6192	10.9263	-1
+28	29	0.2012	0.2611	5.4631	1
+29	30	2.4482	0.9455	11.2095	1
+
+
+
+df.iloc[:, 1:5]
+x1	x2	x3	d
+0	-0.6508	0.1097	4.0009	-1
+1	-1.4492	0.8896	4.4005	-1
+2	2.0850	0.6876	12.0710	-1
+3	0.2626	1.1476	7.7985	1
+4	0.6418	1.0234	7.0427	1
+5	0.2569	0.6730	8.3265	-1
+6	1.1155	0.6043	7.4446	1
+7	0.0914	0.3399	7.0677	-1
+8	0.0121	0.5256	4.6316	1
+9	-0.0429	0.4660	5.4323	1
+10	0.4340	0.6870	8.2287	-1
+11	0.2735	1.0287	7.1934	1
+12	0.4839	0.4851	7.4850	-1
+13	0.4089	-0.1267	5.5019	-1
+14	1.4391	0.1614	8.5843	-1
+15	-0.9115	-0.1973	2.1962	-1
+16	0.3654	1.0475	7.4858	1
+17	0.2144	0.7515	7.1699	1
+18	0.2013	1.0014	6.5489	1
+19	0.6483	0.2183	5.8991	1
+20	-0.1147	0.2242	7.2435	-1
+21	-0.7970	0.8795	3.8762	1
+22	-1.0625	0.6366	2.4707	1
+23	0.5307	0.1285	5.6883	1
+24	-1.2200	0.7777	1.7252	1
+25	0.3957	0.1076	5.6623	-1
+26	-0.1013	0.5989	7.1812	-1
+27	2.0149	0.6192	10.9263	-1
+28	0.2012	0.2611	5.4631	1
+29	2.4482	0.9455	11.2095	1
+
+
+
+
+class Perceptron(object):
+    """
+    Parameters
+    ----------
+    eta: float   Learning rate [0.0,1.0]
+    n_iter: int   Maximum iterations over the training examples (e.g.epochs)
+    
+    Attributes:
+    ----------
+    weights: 1d-array    Perceptron connection weight values
+    errors:  list      Number of misclassified examples in every epoch
+    
+    """
+    def __init__(self, eta=0.01, n_iter=100):
+      """
+       Initialize the learning rate eta with default value of 0.01
+       Maximum epoch is initialized by default 10 
+       
+      """
+      #TODO - set the learning rate, set the maximum iteration / epochs of the training of perceptron
+      self.eta = eta
+      self.n_iter = n_iter
+    
+    def fit(self, X, y):
+        """
+        Neural network training. 
+        Parameters
+        ----------
+        X: 2D array with [n_examples, n_features] where n_examples is the no of training examples and n_features is
+        the number of input features
+        y: n_examples x 1 array,correspond to the label value of each example.
+        """
+        #initialize the weight values with zeros. The weight is a row vector.
+        #self.weights = np.zeros((1,1 + X.shape[1])) 
+        #save the weight values here
+        savetxt('dataw.csv', self.weights, delimiter=',')
+
+        self.weights = np.random.rand(1, 1+X.shape[1]) #initialize with random weight values of row vector 1 x (number of features + bias). shape[1] will returns the number of features
+                                                    #weights[0] is the bias weight value
+                        
+        self.errors = [] #initialize an empty list
+        no_examples = X.shape[0]   #the shape function  returns size of a matrix. where the shape[0] returns the number of rows.
+        for i in range(self.n_iter):  
+            no_errors = 0
+            print('Iteration #',i)
+            for j in range(no_examples):  #for each example in the training data
+                target = y[j]  #current example target value
+                #print(target , " xx\n")
+                xj = X[j]  #get the jth input example of xj = [f1, f2, ..., fn], f is feature value
+                predicted_val = self.predict(xj)
+                
+               # print(xj, target)
+                diff = target - predicted_val;  #(d-y)
+              
+                
+                if ( diff != 0):
+                     update = self.eta * diff  #learning rate x (d-y)
+                    #update weight values
+                     self.weights[0, 1:]  += update * xj;
+                     self.weights[0][0] += -update;  #index 0 is for bias. Remember the bias input is -1.
+                     no_errors += 1
+                     print(xj, target, '\t', predicted_val, 'incorrect' )
+                else:
+                    print(xj, target, '\t', predicted_val, 'correct' )
+            self.errors.append(no_errors)
+            print ("Epoch #" + str(i) + " No of examples misclassified= " + str(no_errors) + "\n")
+            if (no_errors == 0):
+                break;
+        return self
+    
+    def net_input(self, X):
+        #calculate net input for output neuron
+        return np.dot(X, self.weights[0,1:]) - self.weights[0][0]  # dot(X, W) - bias value. 
+    
+    def predict(self, X):
+        #predict the output value given input X
+        sum_input = self.net_input(X)
+        #signum activation function. Change accordingly to the output labels of your data.
+        if ( sum_input >= 0):
+            return 1
+        else:
+            return -1
+        
+    def print_model(self):
+        print("Weight values of NN Model. The index 0 is the bias weight.\n")
+        for val in self.weights:
+            print(str(val) + "\n")
+            
+            
