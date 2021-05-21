@@ -1,13 +1,14 @@
-import pandas as pd #import pandas library
-# often we need some functions from numpy as well
-import numpy as np
-
 from google.colab import drive
 drive.mount('/content/drive')
+
+import numpy as np
+import pandas as pd
+import sys
 
 #Suppose the csv filename is data.csv. The function read_csv will read a csv file and return a data frame. 
 df = pd.read_csv('/content/drive/MyDrive/data.csv/trainingdata (1).csv')
 df
+
 Sample	x1	x2	x3	d
 0	1	-0.6508	0.1097	4.0009	-1
 1	2	-1.4492	0.8896	4.4005	-1
@@ -40,9 +41,8 @@ Sample	x1	x2	x3	d
 28	29	0.2012	0.2611	5.4631	1
 29	30	2.4482	0.9455	11.2095	1
 
-
-
-df.iloc[:, 1:5]
+X=df.iloc[:, 1:5]
+X
 x1	x2	x3	d
 0	-0.6508	0.1097	4.0009	-1
 1	-1.4492	0.8896	4.4005	-1
@@ -74,10 +74,6 @@ x1	x2	x3	d
 27	2.0149	0.6192	10.9263	-1
 28	0.2012	0.2611	5.4631	1
 29	2.4482	0.9455	11.2095	1
-
-
-
-
 class Perceptron(object):
     """
     Parameters
@@ -113,7 +109,7 @@ class Perceptron(object):
         #initialize the weight values with zeros. The weight is a row vector.
         #self.weights = np.zeros((1,1 + X.shape[1])) 
         #save the weight values here
-        savetxt('dataw.csv', self.weights, delimiter=',')
+        
 
         self.weights = np.random.rand(1, 1+X.shape[1]) #initialize with random weight values of row vector 1 x (number of features + bias). shape[1] will returns the number of features
                                                     #weights[0] is the bias weight value
@@ -167,3 +163,54 @@ class Perceptron(object):
             print(str(val) + "\n")
             
             
+#part I of the lab    
+#logic AND data 1 is true, 0 is false.
+#Note that, contrary to the lecture note, the rows are the input feature values, while the columns are individual training examples.
+
+X=df.iloc[:,1:5]
+dataset=X.values
+
+
+print('Load training examples')
+print(dataset)
+
+ppn = Perceptron(0.01, n_iter=50)  #learning rate is 0.01
+X = np.array(dataset[:,0:3])  #examples and input values of logic AND
+y = np.array(dataset[:,3])  #target of logic AND
+#print(X)
+ppn.fit(X,y)  #train the neural network
+ppn.print_model()  #print the weight values
+#
+##test the NN model
+print("Model testing")
+print(ppn.predict(np.array(X[1])))
+print(ppn.predict(np.array(X[2])))
+print(ppn.predict(np.array(X[3])))
+print(ppn.predict(np.array(X[4])))
+print(ppn.predict(np.array(X[5])))
+print(ppn.predict(np.array(X[6])))
+print(ppn.predict(np.array(X[7])))
+print(ppn.predict(np.array(X[8])))
+print(ppn.predict(np.array(X[9])))
+print(ppn.predict(np.array(X[10])))
+print(ppn.predict(np.array(X[11])))
+print(ppn.predict(np.array(X[12])))
+print(ppn.predict(np.array(X[13])))
+print(ppn.predict(np.array(X[14])))
+print(ppn.predict(np.array(X[15])))
+print(ppn.predict(np.array(X[16])))
+print(ppn.predict(np.array(X[17])))
+print(ppn.predict(np.array(X[18])))
+print(ppn.predict(np.array(X[19])))
+print(ppn.predict(np.array(X[20])))
+print(ppn.predict(np.array(X[21])))
+print(ppn.predict(np.array(X[22])))
+print(ppn.predict(np.array(X[23])))
+print(ppn.predict(np.array(X[24])))
+print(ppn.predict(np.array(X[25])))
+print(ppn.predict(np.array(X[26])))
+print(ppn.predict(np.array(X[27])))
+print(ppn.predict(np.array(X[28])))
+print(ppn.predict(np.array(X[29])))
+
+    
