@@ -1,0 +1,65 @@
+import pandas as pd
+import time
+accent = pd.read_csv('data2.csv', names = ["language","X1","X2","X3","X4","X5","X6","X7","X8","X9","X10","X11","X12"])
+accent.head()
+
+accent.describe().transpose()
+
+accent.shape
+
+X = accent.drop('language',axis=1)
+X = X.values
+y = accent['language']
+
+from sklearn.preprocessing import OneHotEncoder
+import numpy as np
+
+onehot_encoder = OneHotEncoder(sparse=False)  #creates an OneHotEncoder object instance
+y = np.array(y)
+y = y.reshape(len(y), 1)
+y = onehot_encoder.fit_transform(y)
+#print(y)
+#print(type(X))
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+
+from sklearn.model_selection import KFold
+from sklearn.model_selection import StratifiedKFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+
+kf = KFold(n_splits=5, shuffle=True)#3-fold cross validation. Check out the use of shuffle
+i = 1;
+
+start = time.time()#save the start time
+
+for train_fold, test_fold in kf.split(X): #repeats 3 times
+    mlp = MLPClassifier(hidden_layer_sizes=(20,10,5), activation='relu', max_iter=600, verbose=False)  #the MLP topology. Change verbose to True to display the training progress.
+    X_train = X[train_fold] #get the subset for the train
+    Y_train = y[train_fold]  #get the target for the train
+    
+    X_test = X[test_fold]  #get the subset for the test
+    Y_test = y[test_fold]  #get the target subset for the test
+    scaler.fit(X_train)
+    
+    #standardize both train and test
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
+    
+    #training the MLP on the test subset
+    print("K=", i)
+    mlp.fit(X_train,Y_train) #training of the neural network
+    #predict on the test subset
+    pred_test = mlp.predict(X_test)
+  
+    conf_matrix = confusion_matrix(Y_test.argmax(1), pred_test.argmax(1))
+    #print confusion matrix
+    print(conf_matrix)
+    #print performance measure
+    print(classification_report(Y_test.argmax(1), pred_test.argmax(1)))
+    i = i + 1
+
+end = time.time()#save the end time
+print ("TRAINING TIME TAKEN :", end - start) #time spent = end - start 
